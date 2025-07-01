@@ -85,6 +85,7 @@ class aifs:
         }
         self.PRODUCTS = {
             "oper": "operational high-resolution forecast, atmospheric fields",
+            "enfo": "ensemble forecast, atmospheric fields",
             "experimental": "experimental high-resolution forecast, atmospheric fields",
         }
 
