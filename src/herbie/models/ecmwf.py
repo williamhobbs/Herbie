@@ -92,26 +92,37 @@ class aifs:
         # example file
         # https://data.ecmwf.int/forecasts/20240229/00z/aifs/0p25/oper/20240229000000-0h-oper-fc.grib2
 
-        product_suffix = "fc"
+        # product suffix
+        if self.product in ["oper", "experimental"]:
+            product_suffix = "fc"
+        else:
+            product_suffix = "pf"
 
-        if self.date >= datetime(2025, 2, 25, 6):
-            # ECMWF’s AI forecasts become operational
-            # https://www.ecmwf.int/en/about/media-centre/news/2025/ecmwfs-ai-forecasts-become-operational
-            post_root = (
-                f"{self.date:%Y%m%d/%Hz}/aifs-single/0p25/{self.product}"
-                f"/{self.date:%Y%m%d%H%M%S}-{self.fxx}h-{self.product}-{product_suffix}.grib2"
-            )
-        elif self.date >= datetime(2025, 2, 9, 12):
-            # Preparing for the operational phase of the AI forecast
-            post_root = (
-                f"{self.date:%Y%m%d/%Hz}/aifs-single/0p25/experimental/{self.product}"
-                f"/{self.date:%Y%m%d%H%M%S}-{self.fxx}h-{self.product}-{product_suffix}.grib2"
-            )
+        if self.product in ["oper", "experimental"]:
+            if self.date >= datetime(2025, 2, 25, 6):
+                # ECMWF’s AI forecasts become operational
+                # https://www.ecmwf.int/en/about/media-centre/news/2025/ecmwfs-ai-forecasts-become-operational
+                post_root = (
+                    f"{self.date:%Y%m%d/%Hz}/aifs-single/0p25/{self.product}"
+                    f"/{self.date:%Y%m%d%H%M%S}-{self.fxx}h-{self.product}-{product_suffix}.grib2"
+                )
+            elif self.date >= datetime(2025, 2, 9, 12):
+                # Preparing for the operational phase of the AI forecast
+                post_root = (
+                    f"{self.date:%Y%m%d/%Hz}/aifs-single/0p25/experimental/{self.product}"
+                    f"/{self.date:%Y%m%d%H%M%S}-{self.fxx}h-{self.product}-{product_suffix}.grib2"
+                )
+            else:
+                post_root = (
+                    f"{self.date:%Y%m%d/%Hz}/aifs/0p25/{self.product}"
+                    f"/{self.date:%Y%m%d%H%M%S}-{self.fxx}h-{self.product}-{product_suffix}.grib2"
+                )
         else:
             post_root = (
-                f"{self.date:%Y%m%d/%Hz}/aifs/0p25/{self.product}"
-                f"/{self.date:%Y%m%d%H%M%S}-{self.fxx}h-{self.product}-{product_suffix}.grib2"
-            )
+                    f"{self.date:%Y%m%d/%Hz}/aifs-ens/0p25/{self.product}"
+                    f"/{self.date:%Y%m%d%H%M%S}-{self.fxx}h-{self.product}-{product_suffix}.grib2"
+                )
+
 
         self.SOURCES = {
             "aws": f"https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com/{post_root}",
